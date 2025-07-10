@@ -7,12 +7,16 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 
 // Register function
 export async function register(username: string, password: string) {
+  console.log("Checking if user exists...");
+
   // Defines an async function to register a new user
   const exists = await db
     .selectFrom("users")
     .select("id")
     .where("username", "=", username)
     .executeTakeFirst();
+
+  console.log("Query completed");
 
   // Checks if a user with the given username already exists in the database. If the user exists, returns an error.
   if (exists) return { error: "User already exists" };
