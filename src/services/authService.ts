@@ -27,21 +27,29 @@ export async function register(username: string, password: string) {
   return { success: true };
 }
 
+// Login function
 export async function login(username: string, password: string) {
+  // Defines an async function to log in a user.
   const user = await db
     .selectFrom("users")
     .selectAll()
     .where("username", "=", username)
     .executeTakeFirst();
 
+  // Looks up the user by username in the database. If the user does not exist, returns an error.
   if (!user) return { error: "User not found" };
 
+  // Compares the provided password with the hashed password in the database.
   const match = await bcrypt.compare(password, user.password);
+
+  // If the password does not match, returns an error.
   if (!match) return { error: "Invalid password" };
 
+  // Creates a JWT token containing the user’s id and username, valid for 1 hour.
   const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
     expiresIn: "1h",
   });
 
+  // Returns the token if login is successful.
   return { token };
 }

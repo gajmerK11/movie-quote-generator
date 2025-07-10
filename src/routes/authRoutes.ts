@@ -8,7 +8,7 @@ export const authRoutes = [
   },
   {
     method: "POST",
-    path: "auth/login",
+    path: "/auth/login",
     handler: loginUser,
   },
 ];
